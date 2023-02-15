@@ -1,10 +1,11 @@
 ﻿using UnityEngine;
 
-namespace KimScor.BodySystem
+namespace StudioScor.BodySystem
 {
-    [CreateAssetMenu(menuName = "Body/new Body", fileName = "Body_")]
-    public class Body : ScriptableObject
+    [CreateAssetMenu(menuName = "StudioScor/Body/new BodyTag", fileName = "Body_")]
+    public class BodyTag : ScriptableObject
     {
+        [Header(" [ Body ] ")]
         [SerializeField] private string _Name;
         [SerializeField, TextArea] private string _Description;
 

@@ -1,7 +1,9 @@
 {
-    "name": "KimScor.BodySystem",
-    "rootNamespace": "KimScor.BodySystem",
-    "references": [],
+    "name": "StudioScor.BodySystem",
+    "rootNamespace": "StudioScor.BodySystem",
+    "references": [
+        "GUID:0e56af4e027762c43b7508efc3b00495"
+    ],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
