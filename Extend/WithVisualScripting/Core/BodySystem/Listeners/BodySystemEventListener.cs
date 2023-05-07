@@ -22,7 +22,7 @@ namespace StudioScor.BodySystem.VisualScripting
                 bodySystem.OnRemovedBodyPart -= BodySystem_OnRemovedBodyPart;
             }
         }
-        private void BodySystem_OnRemovedBodyPart(BodySystemComponent bodySystem, BodyTag bodytag, BodyPartComponent transform)
+        private void BodySystem_OnRemovedBodyPart(BodySystemComponent bodySystem, BodyTag bodytag, IBodyPart transform)
         {
             if (_ChangedBodyPartValue is null)
                 _ChangedBodyPartValue = new();
@@ -36,7 +36,7 @@ namespace StudioScor.BodySystem.VisualScripting
             _ChangedBodyPartValue.BodyPart = null;
         }
 
-        private void BodySystem_OnGrantedBodyPart(BodySystemComponent bodySystem, BodyTag bodytag, BodyPartComponent transform)
+        private void BodySystem_OnGrantedBodyPart(BodySystemComponent bodySystem, BodyTag bodytag, IBodyPart transform)
         {
             if (_ChangedBodyPartValue is null)
                 _ChangedBodyPartValue = new();

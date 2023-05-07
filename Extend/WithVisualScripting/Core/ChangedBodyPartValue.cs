@@ -4,7 +4,7 @@ namespace StudioScor.BodySystem.VisualScripting
     public class ChangedBodyPartValue
     {
         public BodyTag BodyTag;
-        public BodyPartComponent BodyPart;
+        public IBodyPart BodyPart;
     }
 }
 

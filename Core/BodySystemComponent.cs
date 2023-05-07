@@ -5,17 +5,29 @@ using StudioScor.Utilities;
 
 namespace StudioScor.BodySystem
 {
+    public interface IBodySystem
+    {
+        public GameObject gameObject { get; }
+        public Transform transform { get; }
+
+        public IReadOnlyDictionary<BodyTag, IBodyPart> BodyParts { get; }
+
+        public bool TryGrantBodyPart(BodyTag tag, IBodyPart bodyPart);
+        public bool TryRemoveBodyPart(BodyTag tag);
+
+    }
 
     [DefaultExecutionOrder(BodySystemExcutionOrder.MAIN_ORDER)]
     [AddComponentMenu("StudioScor/BodySystem/BodySystem Component", order: 0)]
-    public class BodySystemComponent : BaseMonoBehaviour
+    public class BodySystemComponent : BaseMonoBehaviour, IBodySystem
     {
         #region Events
-        public delegate void ChangedBodyPartHandler(BodySystemComponent bodySystem, BodyTag body, BodyPartComponent transform);
+        public delegate void ChangedBodyPartHandler(BodySystemComponent bodySystem, BodyTag body, IBodyPart bodyPart);
         #endregion
 
         [Header(" [ Body System ] ")]
-        [SerializeField] private Dictionary<BodyTag, BodyPartComponent> _BodyParts;
+        private readonly Dictionary<BodyTag, IBodyPart> _BodyParts = new();
+        public IReadOnlyDictionary<BodyTag, IBodyPart> BodyParts => _BodyParts;
 
         public event ChangedBodyPartHandler OnGrantedBodyPart;
         public event ChangedBodyPartHandler OnRemovedBodyPart;
@@ -26,36 +38,11 @@ namespace StudioScor.BodySystem
         }
         private void Setup()
         {
-            if (_BodyParts == null)
-            {
-                _BodyParts = new Dictionary<BodyTag, BodyPartComponent>();
-            }
         }
 
         protected virtual void OnSetup() { }
 
-
-        public bool TryGetBodyPart(BodyTag body, out BodyPartComponent bodyPart)
-        {
-            return _BodyParts.TryGetValue(body, out bodyPart);
-        }
-        public bool HasBodyPart(BodyTag bodyTag)
-        {
-            return _BodyParts.ContainsKey(bodyTag);
-        }
-        public BodyPartComponent TryGetBodyPart(BodyTag body)
-        {
-            if(_BodyParts.TryGetValue(body, out BodyPartComponent bodyPart))
-            {
-                return bodyPart;
-            }
-            else
-            {
-                return null;
-            }
-        }
-
-        public bool TryGrantBodyPart(BodyTag body, BodyPartComponent transform)
+        public bool TryGrantBodyPart(BodyTag body, IBodyPart transform)
         {
             if(_BodyParts.TryAdd(body, transform))
             {
@@ -70,7 +57,7 @@ namespace StudioScor.BodySystem
         }
         public bool TryRemoveBodyPart(BodyTag body)
         {
-            if (_BodyParts.TryGetValue(body, out BodyPartComponent value))
+            if (_BodyParts.TryGetValue(body, out IBodyPart value))
             {
                 _BodyParts.Remove(body);
 
@@ -85,11 +72,11 @@ namespace StudioScor.BodySystem
         }
 
         #region Events CallBack
-        public void Callback_OnGrantedBodyPart(BodyTag bodyTag, BodyPartComponent bodyPart)
+        public void Callback_OnGrantedBodyPart(BodyTag bodyTag, IBodyPart bodyPart)
         {
             OnGrantedBodyPart?.Invoke(this, bodyTag, bodyPart);
         }
-        public void Callback_OnRemovedBodyPart(BodyTag bodyTag, BodyPartComponent bodyPart)
+        public void Callback_OnRemovedBodyPart(BodyTag bodyTag, IBodyPart bodyPart)
         {
             OnRemovedBodyPart?.Invoke(this, bodyTag, bodyPart);
         }
