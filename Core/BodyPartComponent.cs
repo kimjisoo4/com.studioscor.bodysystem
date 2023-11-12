@@ -37,7 +37,7 @@ namespace StudioScor.BodySystem
             {
                 if(!transform.TryGetComponentInParentOrChildren(out _BodySystem))
                 {
-                    Log($"{gameObject} is Not Has {nameof(IBodySystem)}!!!", true);
+                    LogError($"{gameObject} is Not Has {nameof(IBodySystem)}!!!");
                 }
             }
         }
@@ -45,14 +45,12 @@ namespace StudioScor.BodySystem
         private void OnEnable()
         {
             Log("Try Grant Body Part - " + _BodyTag);
-
             BodySystem.TryGrantBodyPart(_BodyTag, this);
         }
 
         private void OnDisable()
         {
             Log("Try Remove Body Part - " + _BodyTag);
-
             BodySystem.TryRemoveBodyPart(_BodyTag);
         }
 
