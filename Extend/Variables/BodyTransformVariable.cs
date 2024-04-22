@@ -20,7 +20,7 @@ namespace StudioScor.BodySystem.Variable
             _bodySystem = owner.GetBodySystem();
         }
 
-        public override IVariable<Transform> Clone()
+        public override ITransformVariable Clone()
         {
             var clone = new BodyTransformVariable();
 

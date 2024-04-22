@@ -21,7 +21,7 @@ namespace StudioScor.BodySystem.Variable
             _bodySystem = owner.GetBodySystem();
         }
 
-        public override IVariable<Vector3> Clone()
+        public override IPositionVariable Clone()
         {
             var clone = new BodyPositionVariable();
 
