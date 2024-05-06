@@ -33,14 +33,15 @@ namespace StudioScor.BodySystem.Variable
         public override Vector3 GetValue()
         {
             var tag = _original is null ? _bodyTag : _original._bodyTag;
+            Vector3 offset = _original is null ? _offset : _original._offset;
 
             if (_bodySystem.TryGetBodyPart(tag, out IBodyPart bodypart))
             {
-                return bodypart.transform.TransformPoint(_original._offset);
+                return bodypart.transform.TransformPoint(offset);
             }
             else
             {
-                return _bodySystem.transform.TransformPoint(_original._offset);
+                return _bodySystem.transform.TransformPoint(offset);
             }
         }
     }
