@@ -2,7 +2,7 @@ using StudioScor.Utilities;
 using System;
 using UnityEngine;
 
-namespace StudioScor.BodySystem.Variable
+namespace StudioScor.BodySystem.Extend.Variable
 {
     [Serializable]
     public class BodyPositionVariable : PositionVariable

@@ -11,6 +11,7 @@ namespace StudioScor.BodySystem
         public BodyTag BodyTag { get; }
         public bool CanEquiped { get; }
         public void SetCanEquip(bool isEquip);
+        public void SetOwner(IBodySystem newBodySystem);
     }
 
     [DefaultExecutionOrder(BodySystemExcutionOrder.SUB_ORDER)]
@@ -18,48 +19,64 @@ namespace StudioScor.BodySystem
     {
         [Header(" [ Body Part Component ] ")]
         [SerializeField] private BodyTag _BodyTag;
-        [SerializeField] private bool _CanEquiped = true;
+        [SerializeField] private bool _canEquiped = true;
+        [SerializeField] private bool _useAutoAttach = true;
 
-        private IBodySystem _BodySystem;
+        private IBodySystem _bodySystem;
         public BodyTag BodyTag => _BodyTag;
-        public IBodySystem BodySystem => _BodySystem;
-        public bool CanEquiped => _CanEquiped;
+        public IBodySystem BodySystem => _bodySystem;
+        public bool CanEquiped => _canEquiped;
 
 #if UNITY_EDITOR
         private void Reset()
         {
-            _BodySystem = GetComponentInParent<IBodySystem>();
+            _bodySystem = GetComponentInParent<IBodySystem>();
         }
 #endif
-        private void Awake()
+        public void SetOwner(IBodySystem newBodySystem)
         {
-            if(_BodySystem is null)
+            if(_bodySystem is not null)
             {
-                if(!transform.TryGetComponentInParentOrChildren(out _BodySystem))
-                {
-                    LogError($"{gameObject} is Not Has {nameof(IBodySystem)}!!!");
-                }
+                Log("Try Remove Body Part - " + _BodyTag);
+                BodySystem.TryRemoveBodyPart(_BodyTag);
+            }
+
+            _bodySystem = newBodySystem;
+
+            if (_bodySystem is not null)
+            {
+                Log("Try Grant Body Part - " + _BodyTag);
+                BodySystem.TryGrantBodyPart(_BodyTag, this);
             }
         }
 
         private void OnEnable()
         {
-            Log("Try Grant Body Part - " + _BodyTag);
-            BodySystem.TryGrantBodyPart(_BodyTag, this);
+            if (!_useAutoAttach)
+                return;
+
+            if (!transform.TryGetComponentInParentOrChildren(out _bodySystem))
+            {
+                LogError($"{gameObject} is Not Has {nameof(IBodySystem)}!!!");
+            }
+
+            SetOwner(_bodySystem);
         }
 
         private void OnDisable()
         {
-            Log("Try Remove Body Part - " + _BodyTag);
-            BodySystem.TryRemoveBodyPart(_BodyTag);
+            if (!_useAutoAttach)
+                return;
+
+            SetOwner(null);
         }
 
         public void SetCanEquip(bool canEquip)
         {
-            if (_CanEquiped == canEquip)
+            if (_canEquiped == canEquip)
                 return;
 
-            _CanEquiped = canEquip;
+            _canEquiped = canEquip;
         }
     }
 }
